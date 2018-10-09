@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <!-- 
+  配置节点严格按照以下顺序来配
+  configuration (
+  properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, 
+  objectWrapperFactory?, reflectorFactory?, plugins?, 
+  environments?, databaseIdProvider?, mappers?
+  )
+  -->
+<configuration>
+<!-- 配置settings -->
+<settings>
+ <!-- 配置二级缓存 -->
+ <setting name="cacheEnabled" value="true"/>
+</settings>
+
+<!-- 配置分页插件 -->
+<plugins>
+    <plugin interceptor="com.github.pagehelper.PageInterceptor">
+        <!--配置参数，指定数据库方言 ，这里使用oracle数据库-->
+        <property name="helperDialect" value="oracle"/>
+	</plugin>
+</plugins>
+
+<!-- 环境，这里是开发环境， default项目中要使用的环境 ，值一定要在配置中存在，和environment 的id一致 -->
+  <environments default="development">
+  <!-- 一个开发环境,一个项目中可以配置多个环境，id的值自己定义 -->
+    <environment id="development">
+      <!-- 事务管理器，type的值不能自己定义，MyBatis定义了它的值，我们只能从他定义的值中去选择 ,有两个值：
+      JDBC：这个配置就是直接使用了 JDBC 的提交和回滚设置，它依赖于从数据源得到的连接来管理事务作用域
+      MANAGED：这个配置几乎没做什么。它从来不提交或回滚一个连接，而是让容器来管理事务的整个生命周期（比如 JEE 应用服务器的上下文）。
+                                    默认情况下它会关闭连接，然而一些容器并不希望这样，
+                                    因此需要将 closeConnection 属性设置为 false 来阻止它默认的关闭行为
+      -->
+      <transactionManager type="JDBC"/>
+      <!-- 数据源，使用标准的 JDBC 数据源接口来配置 JDBC 连接对象的资源
+           type的值要选择MyBatis定义的值，有三个值： 
+           UNPOOLED：这个数据源的实现只是每次被请求时打开和关闭连接。
+                                                   虽然有点慢，但对于在数据库连接可用性方面没有太高要求的简单应用程序来说，是一个很好的选择。 
+                                                   不同的数据库在性能方面的表现也是不一样的，对于某些数据库来说，使用连接池并不重要，
+                                                   这个配置就很适合这种情形
+           POOLED：这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间。 
+                                               这是一种使得并发 Web 应用快速响应请求的流行处理方式
+           JNDI：这个数据源的实现是为了能在如 EJB 或应用服务器这类容器中使用，
+                                         容器可以集中或在外部配置数据源，然后放置一个 JNDI 上下文的引用
+      -->
+      <dataSource type="POOLED">
+       <!-- 数据库驱动 -->
+        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+        <!-- 数据库地址 -->
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+        <!-- 数据库用户名 -->
+        <property name="username" value="hz"/>
+        <!-- 数据库密码 -->
+        <property name="password" value="123456"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <!-- mapper的映射文件，以“/”分割，从包名开始，要带后缀名 -->
+    <mapper resource="com/wangqingbo/mapper/ProjectInfoMapper.xml"/>
+    <mapper resource="com/wangqingbo/mapper/RelationMapper.xml"/>
+  </mappers>
+</configuration>

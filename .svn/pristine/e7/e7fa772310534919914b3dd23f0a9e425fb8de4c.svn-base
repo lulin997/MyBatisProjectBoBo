@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：接口的名称，包含包名和类名,将mapper接口和配置文件对应起来
+
+
+ -->  
+<mapper namespace="com.wangqingbo.mapper.RelationMapper">
+
+ <!-- 定义一个resultMap，查询订单和用户的信息 -->
+ <resultMap type="com.wangqingbo.entity.Orders" id="orderUserResultMap">
+  <!-- 订单实体类和数据库表的对应关系 -->
+  <id property="orderId" column="ORDERID"/>
+  <result property="orderNumber" column="ORDERNUMBER"/>
+  <result property="userId" column="USER_ID"/>
+  <result property="createtime" javaType="java.util.Date" column="CREATETIME"/>
+  <result property="remark" column="REMARK"/>
+  <!-- 配置订单和用户的一对一关系 
+  property:类Orders中设置的用户的属性名称
+  javaType:指定property的数据类型
+  -->
+  <association property="userInfo" javaType="com.wangqingbo.entity.UserInfo">
+   <!-- 配置用户的属性信息 
+   id:用户表的主键
+   property：用户类中的属性
+   column：对方关联表中的字段名，这里是指订单表中的用户id
+   -->
+   <id property="userId" column="USER_ID"/>
+   <result property="userName" column="USERNAME"/>
+   <result property="sex" column="SEX"/>
+   <result property="birthday" javaType="java.util.Date" column="BIRTHDAY"/>
+   <result property="address" column="ADDRESS"/>
+  </association>
+ </resultMap>
+
+
+<!-- 查询订单和订单所属用户 
+ 多表关联查询时，sql语句要完整，也必须是多表关联查询
+-->
+ <select id="queryOrderUsers" resultMap="orderUserResultMap">
+  SELECT * FROM MYBATISORDERS O,MYBATISUSERINFO U WHERE O.USER_ID=U.USERID
+ </select>
+</mapper>

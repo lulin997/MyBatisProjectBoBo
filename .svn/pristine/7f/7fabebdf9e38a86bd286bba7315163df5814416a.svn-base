@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<!-- 数据库驱动jar包位置，绝对路径，和项目目录无关 -->
+	<classPathEntry
+		location="D:\Eclipse_Student_Class\Java1801\MyBatisProject\WebContent\WEB-INF\lib\ojdbc6.jar" />
+
+	<context id="context1">
+		<commentGenerator>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="false" />
+		</commentGenerator>
+
+		<!-- 连接数据库 -->
+		<jdbcConnection 
+		    connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+			driverClass="oracle.jdbc.driver.OracleDriver" 
+			password="123456"
+			userId="hz" />
+
+		<!-- 生成pojo类的位置 -->
+		<javaModelGenerator targetPackage="com.oaec.entity"
+			targetProject="MyBatisProject/src">
+		</javaModelGenerator>
+
+		<!-- 接口生成位置 -->
+		<sqlMapGenerator targetPackage="com.oaec.mapper"
+			targetProject="MyBatisProject/src">
+		</sqlMapGenerator>
+		<!-- 生成映射文件的位置 -->
+		<javaClientGenerator targetPackage="com.oaec.mapper"
+			targetProject="MyBatisProject/src" type="XMLMAPPER" />
+
+		<!-- 数据库中的表 -->
+		<table tableName="PROJECTINFO" />
+	</context>
+</generatorConfiguration>

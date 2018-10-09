@@ -1,0 +1,19 @@
+package com.wangqingbo.mapper;
+
+import java.util.List;
+
+import com.wangqingbo.entity.ProjectInfo;
+
+/**
+ * 项目信息的mapper接口
+ * 接口名称要和配置文件的名称相同
+ * @author Administrator
+ */
+public interface ProjectInfoMapper
+{
+	/**
+	 * 查询所有的项目信息
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryAllProjectInfo();
+}

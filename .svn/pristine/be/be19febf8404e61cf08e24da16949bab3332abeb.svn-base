@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：接口的名称，包含包名和类名,将mapper接口和配置文件对应起来
+
+
+ -->  
+<mapper namespace="com.wangqingbo.mapper.ProjectInfoMapper">
+  <!-- 一次查询
+    id：名称为statementid，对应接口中的方法名，区分大小写,相当于select标签实现了接口中的queryAllProjectInfo
+                   同一个文件中，id的值不能重复
+    resultType:方法的返回结果，这里要设置列表中的泛型对象
+    select标签里面写方法queryAllProjectInfo执行时的sql语句
+    使用resultType时，数据库字段和类属性的对应关系为：名称一致就可以，不区分大小写,不推荐使用*
+    如果数据库字段和类属性名不一致，要在数据库字段后加别名，别名和类属性一致就可以
+    SQL语句后面不能出现";"
+   -->
+  <select id="queryAllProjectInfo" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+  </select>
+  <!-- 根据项目名称查询项目信息 
+   parameterType:将要传入语句的参数的完全限定类名或别名
+    传进来的参数，如果使用#，就表示是占位符的方式，推荐
+    可以使用#{value}或#{其他名称}来接收参数
+  -->
+  <select id="queryProjectInfoByPrjName" parameterType="String" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE #{prjname}
+  </select>
+  
+  <!-- 根据项目名称查询项目信息 
+   parameterType:将要传入语句的参数的完全限定类名或别名
+   传进来的参数，如果使用$，就表示是字符串拼接的方式，容易引起sql注入，不推荐
+   使用${value}来接收参数
+  -->
+  <select id="queryProjectInfoByPrjName1" parameterType="String" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE '${value}'
+  </select>
+  
+  <!-- 根据项目名称查询项目信息 ,多个参数
+   parameterType:将要传入语句的参数的完全限定类名或别名
+    传进来的参数，如果使用#，就表示是占位符的方式，推荐
+    可以使用#{value}或#{其他名称}来接收参数
+    如果有多个参数：
+    1、并且参数类型不一样，可以不用parameterType
+    2、需要使用@Param注解，给参数名称，注解命名的参数和sql语句#{}里面的参数名一致
+  -->
+  <select id="queryProjectInfoByParams" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE #{projectName} AND T.PROJECT_CODE LIKE #{projectCode}  AND T.PROJECT_TOTAL > #{projectTotal}
+  </select>
+  
+  <!--
+          使用对象作为参数，parameterType要指定参数类型
+          接收参数时，使用#{对象的属性名}
+  -->
+  <select id="queryProjectInfoByObject" parameterType="com.wangqingbo.entity.ProjectInfo" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE #{projectName} AND T.PROJECT_CODE LIKE #{projectCode}  AND T.PROJECT_TOTAL > #{projectTotal}
+  </select>
+</mapper>

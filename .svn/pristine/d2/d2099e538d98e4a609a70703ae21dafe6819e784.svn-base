@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：接口的名称，包含包名和类名,将mapper接口和配置文件对应起来
+
+
+ -->  
+<mapper namespace="com.wangqingbo.mapper.ProjectInfoMapper">
+  <!-- 一次查询
+    id：名称为statementid，对应接口中的方法名，区分大小写,相当于select标签实现了接口中的queryAllProjectInfo
+    resultType:方法的返回结果，这里要设置列表中的泛型对象
+    select标签里面写方法queryAllProjectInfo执行时的sql语句
+    使用resultType时，数据库字段和类属性的对应关系为：名称一致就可以，不区分大小写,不推荐使用*
+    如果数据库字段和类属性名不一致，要在数据库字段后加别名，别名和类属性一致就可以
+    SQL语句后面不能出现";"
+   -->
+  <select id="queryAllProjectInfo" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+  </select>
+</mapper>

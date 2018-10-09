@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：接口的名称，包含包名和类名,将mapper接口和配置文件对应起来
+
+
+ -->  
+<mapper namespace="com.wangqingbo.mapper.ProjectInfoMapper">
+  <!-- 一次查询
+    id：名称为statementid，对应接口中的方法名，区分大小写,相当于select标签实现了接口中的queryAllProjectInfo
+                   同一个文件中，id的值不能重复
+    resultType:方法的返回结果，这里要设置列表中的泛型对象
+    select标签里面写方法queryAllProjectInfo执行时的sql语句
+    使用resultType时，数据库字段和类属性的对应关系为：名称一致就可以，不区分大小写,不推荐使用*
+    如果数据库字段和类属性名不一致，要在数据库字段后加别名，别名和类属性一致就可以
+    SQL语句后面不能出现";"
+    
+    include标签引用sql片段，refid的值要有定义
+   -->
+  <select id="queryAllProjectInfo" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT 
+    <include refid="project_base_column_resulttype"></include>
+     FROM PROJECTINFO  
+  </select>
+  <!-- 根据项目名称查询项目信息 
+   parameterType:将要传入语句的参数的完全限定类名或别名
+    传进来的参数，如果使用#，就表示是占位符的方式，推荐
+    可以使用#{value}或#{其他名称}来接收参数
+  -->
+  <select id="queryProjectInfoByPrjName" parameterType="String" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE #{prjname}
+  </select>
+  
+  <!-- 根据项目名称查询项目信息 
+   parameterType:将要传入语句的参数的完全限定类名或别名
+   传进来的参数，如果使用$，就表示是字符串拼接的方式，容易引起sql注入，不推荐
+   使用${value}来接收参数
+  -->
+  <select id="queryProjectInfoByPrjName1" parameterType="String" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE '${value}'
+  </select>
+  
+  <!-- 根据项目名称查询项目信息 ,多个参数
+   parameterType:将要传入语句的参数的完全限定类名或别名
+    传进来的参数，如果使用#，就表示是占位符的方式，推荐
+    可以使用#{value}或#{其他名称}来接收参数
+    如果有多个参数：
+    1、并且参数类型不一样，可以不用parameterType
+    2、需要使用@Param注解，给参数名称，注解命名的参数和sql语句#{}里面的参数名一致
+  如果要用到<或<=或>或>=的运算符，符号和xml配置文件的标签有冲突，需要转义，如下：
+  < : &lt;
+  > : &gt;
+  -->
+  <select id="queryProjectInfoByParams" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE #{projectName} AND T.PROJECT_CODE LIKE #{projectCode}  AND T.PROJECT_TOTAL &lt; #{projectTotal}
+  </select>
+  
+  <!--
+          使用对象作为参数，parameterType要指定参数类型
+          接收参数时，使用#{对象的属性名}
+  -->
+  <select id="queryProjectInfoByObject" parameterType="com.wangqingbo.entity.ProjectInfo" resultType="com.wangqingbo.entity.ProjectInfo">
+    SELECT T.PROJECT_ID PROJECTID,T.PROJECT_NAME PROJECTNAME,T.PROJECT_CODE PROJECTCODE,T.PROJECT_UNIT PROJECTUNIT,T.START_TIME STARTTIME,T.END_TIME ENDTIME,T.VOL_TAGE VOLTAGE,T.CREATE_USER CREATEUSER,T.PROJECT_TOTAL PROJECTTOTAL FROM PROJECTINFO T 
+    WHERE T.PROJECT_NAME LIKE #{projectName} AND T.PROJECT_CODE LIKE #{projectCode}  AND T.PROJECT_TOTAL > #{projectTotal}
+  </select>
+  
+  <!-- 保存项目 -->
+  <insert id="saveProjectInfo" parameterType="com.wangqingbo.entity.ProjectInfo">
+  <!-- 生成唯一的id 
+  keyProperty:对象属性对应的数据库主键
+  order:两个值， BEFORE：插入之前，给属性赋值   AFTER：插入之后给属性赋值
+  resultType:key的类型
+  -->
+  <selectKey keyProperty="projectId" order="BEFORE" resultType="String">
+   SELECT SYS_GUID() FROM DUAL
+  </selectKey>
+   INSERT INTO PROJECTINFO(PROJECT_ID,PROJECT_NAME,PROJECT_CODE,PROJECT_UNIT,START_TIME,END_TIME)  
+   VALUES(#{projectId},#{projectName},#{projectCode},#{projectUnit},#{startTime},#{endTime})
+  </insert>
+  
+  <!-- 更新项目 -->
+  <update id="updateProjectInfo" parameterType="com.wangqingbo.entity.ProjectInfo">
+    UPDATE PROJECTINFO SET PROJECT_NAME=#{projectName},PROJECT_CODE=#{projectCode} 
+    WHERE PROJECT_ID=#{projectId}
+  </update>
+  
+  <!-- 删除项目 -->
+  <delete id="deleteProjectInfo" parameterType="String">
+   DELETE FROM PROJECTINFO WHERE PROJECT_ID=#{projectId}
+  </delete>
+  
+  <!-- 定义resultMap 
+  id:resultMap的引用名称，自己定义，不能重复
+  type:返回的类型，一般是指对象的全名，包含包名和类名
+   -->
+  <resultMap type="com.wangqingbo.entity.ProjectInfo" id="projectInfoResultMap">
+   <!-- 配置对象属性和数据库字段的对应关系  id对应的主键
+    property:对象的属性名，区分大小写
+    column:数据库中的字段名
+   -->
+   <id property="projectId" column="PROJECT_ID"/>
+   <!-- 其他的属性 -->
+   <result property="projectName" column="PROJECT_NAME"/>
+   <result property="projectCode" column="PROJECT_CODE"/>
+   <result property="projectUnit" column="PROJECT_UNIT"/>
+   <result property="startTime" javaType="java.util.Date" column="START_TIME"/>
+   <result property="endTime" javaType="java.util.Date" column="END_TIME"/>
+   <result property="vol" column="VOL_TAGE"/>
+   <result property="createUser" column="CREATE_USER"/>
+   <result property="projectTotal" javaType="Double" column="PROJECT_TOTAL"/>
+  </resultMap>
+  
+  <!-- 使用resultMap返回数据
+    resultMap：返回的数据类型，值要取已经定义好了的resultMap的id,
+                                    和select标签的顺序无关,可以在select的前面，也可以在后面
+    resultMap和resultType两个属性不能同时出现，只能选其中一个                                
+    使用resultMap时，sql语句中就不用再使用别名了
+   -->
+  <select id="queryAllProjectInfoResultMap" resultMap="projectInfoResultMap">
+   SELECT 
+   <include refid="project_base_column_resultmap"></include>
+    FROM PROJECTINFO
+  </select>
+  
+  <!-- sql片段，把常用的一些sql语句定义成一个片段，使用时直接调用id即可
+   id:sql片段的名称，自己定义，不能重复
+   resultType要查询的字段
+   -->
+  <sql id="project_base_column_resulttype">
+   PROJECT_ID PROJECTID,PROJECT_NAME PROJECTNAME,PROJECT_CODE PROJECTCODE,
+   PROJECT_UNIT PROJECTUNIT,START_TIME STARTTIME,END_TIME ENDTIME,
+   VOL_TAGE VOLTAGE,CREATE_USER CREATEUSER,PROJECT_TOTAL PROJECTTOTAL
+  </sql>
+  
+  <!-- sql片段，把常用的一些sql语句定义成一个片段，使用时直接调用id即可
+   id:sql片段的名称，自己定义，不能重复
+   resultMap要查询的字段
+   -->
+  <sql id="project_base_column_resultmap">
+  PROJECT_ID,PROJECT_NAME,PROJECT_CODE,PROJECT_UNIT,START_TIME,
+  END_TIME,VOL_TAGE,CREATE_USER,PROJECT_TOTAL
+  </sql>
+  
+  
+</mapper>

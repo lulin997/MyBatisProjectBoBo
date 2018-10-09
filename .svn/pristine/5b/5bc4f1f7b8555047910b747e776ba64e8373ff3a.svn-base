@@ -1,0 +1,20 @@
+package com.wangqingbo.mapper;
+
+import java.util.List;
+
+import com.wangqingbo.entity.Orders;
+
+/**
+ * 关联关系映射接口
+ * @author Administrator
+ *
+ */
+public interface RelationMapper
+{
+
+	/**
+	 * 查询所有订单和订单所属的用户
+	 * @return 订单列表
+	 */
+	List<Orders> queryOrderUsers();
+}

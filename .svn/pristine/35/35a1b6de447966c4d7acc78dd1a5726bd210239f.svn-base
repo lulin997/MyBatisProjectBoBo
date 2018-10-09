@@ -1,0 +1,111 @@
+package com.wangqingbo.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.wangqingbo.entity.ProjectInfo;
+
+/**
+ * 项目信息的mapper接口
+ * 接口名称要和配置文件的名称相同
+ * @author Administrator
+ */
+public interface ProjectInfoMapper
+{
+	/**
+	 * 查询所有的项目信息
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryAllProjectInfo();
+	
+	/**
+	 * 查询所有的项目信息，使用resultMap返回数据
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryAllProjectInfoResultMap();
+	
+	/**
+	 * 根据id查询项目
+	 * @param projectId 项目id
+	 * @return 对象
+	 */
+	ProjectInfo queryProjectInfoById(String projectId);
+	
+	/**
+	 * 根据项目名称查找项目列表，使用#{value}接收参数，占位符方式，推荐使用
+	 * @param projectName 项目名称
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryProjectInfoByPrjName(String projectName);
+	
+	/**
+	 * 根据项目名称查找项目列表，使用${value}接收参数，字符串拼接，
+	 * 会产生sql注入
+	 * @param projectName 项目名称
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryProjectInfoByPrjName1(String projectName);
+	
+	/**
+	 * 根据参数查找项目列表，使用#{value}接收参数，占位符方式，推荐使用
+	 * 如果一个方法中有多个参数，
+	 * 
+	    1、参数类型不一样，配置文件中可以不用parameterType
+	    2、需要使用@Param注解，给参数名称，注解命名的参数和sql语句#{}里面的参数名一致
+	 * @param projectName 项目名称
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryProjectInfoByParams(@Param("projectName")String projectName,@Param("projectCode")String projectCode,@Param("projectTotal")Double projectTotal);
+	
+	/**
+	 * 根据对象参数查找项目列表，使用#{value}接收参数，占位符方式，推荐使用
+	 * 接收参数时，使用#{对象的属性名}
+	 * @param prj 项目对象
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryProjectInfoByObject(ProjectInfo prj);
+	
+	/**
+	 * 保存项目信息
+	 * @param prj 项目信息
+	 */
+	void saveProjectInfo(ProjectInfo prj);
+	
+	/**
+	 * 修改项目信息,自己写sql语句，设置要更新的字段
+	 * @param prj 项目信息
+	 */
+	void updateProjectInfo(ProjectInfo prj);
+	
+	/**
+	 * 删除项目
+	 * @param projectId 项目id
+	 */
+	void deleteProjectInfo(String projectId);
+	
+	/**
+	 * 动态查询项目信息
+	 * @param projectName 项目名称
+	 * @param ProjectCode 项目编码
+	 * @param projectTotal 项目的总投资
+	 * @return 符合条件的项目列表
+	 */
+	List<ProjectInfo> queryProjectDySql(@Param("projectName")String projectName,@Param("projectCode")String projectCode,@Param("projectTotal")Double projectTotal);
+	
+	/**
+	 * 动态查询项目信息，多个条件，一次只能执行一个条件
+	 * @param projectName 项目名称
+	 * @param ProjectCode 项目编码
+	 * @param projectTotal 项目的总投资
+	 * @return 符合条件的项目列表
+	 */
+	List<ProjectInfo> queryProjectDySqlChoose(@Param("projectName")String projectName,@Param("projectCode")String projectCode,@Param("projectTotal")Double projectTotal);
+	
+	/**
+	 * 删除多条数据
+	 * @param projectIds 项目id的列表
+	 * @return 删除成功的数据条数
+	 */
+	int deleteMultiProjects(@Param("projectIds")List<String> projectIds);
+}

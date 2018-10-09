@@ -1,0 +1,47 @@
+package com.wangqingbo.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.wangqingbo.entity.ProjectInfo;
+
+/**
+ * 项目信息的mapper接口
+ * 接口名称要和配置文件的名称相同
+ * @author Administrator
+ */
+public interface ProjectInfoMapper
+{
+	/**
+	 * 查询所有的项目信息
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryAllProjectInfo();
+	
+	/**
+	 * 根据项目名称查找项目列表，使用#{value}接收参数，占位符方式，推荐使用
+	 * @param projectName 项目名称
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryProjectInfoByPrjName(String projectName);
+	
+	/**
+	 * 根据项目名称查找项目列表，使用${value}接收参数，字符串拼接，
+	 * 会产生sql注入
+	 * @param projectName 项目名称
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryProjectInfoByPrjName1(String projectName);
+	
+	/**
+	 * 根据参数查找项目列表，使用#{value}接收参数，占位符方式，推荐使用
+	 * 如果一个方法中有多个参数，
+	 * 
+	    1、参数类型不一样，配置文件中可以不用parameterType
+	    2、需要使用@Param注解，给参数名称，注解命名的参数和sql语句#{}里面的参数名一致
+	 * @param projectName 项目名称
+	 * @return 项目列表
+	 */
+	List<ProjectInfo> queryProjectInfoByParams(@Param("projectName")String projectName,@Param("projectCode")String projectCode,@Param("projectTotal")Double projectTotal);
+}
